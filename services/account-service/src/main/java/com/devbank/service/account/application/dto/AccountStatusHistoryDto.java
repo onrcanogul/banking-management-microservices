@@ -1,4 +1,4 @@
-package com.devbank.service.account.domain.application.dto;
+package com.devbank.service.account.application.dto;
 
 import com.devbank.service.account.domain.entity.Account;
 import com.devbank.service.account.domain.enumeration.AccountStatus;

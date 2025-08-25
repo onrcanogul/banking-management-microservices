@@ -33,7 +33,7 @@ public class Account implements IInsertAuditing, IUpdateAuditing {
     private UUID ledgerAccountId;
     @Column(name = "IBAN", columnDefinition = "VARCHAR2(34)", nullable = false)
     private String iban;
-    @Column(name = "CURRENCY", columnDefinition = "CHAR(3)", nullable = false)
+    @Column(name = "CURRENCY", columnDefinition = "VARCHAR2(3)", nullable = false)
     private String currency;
     @Version @Column(name = "ROW_VERSION", columnDefinition = "NUMBER(19,0)")
     private int version;

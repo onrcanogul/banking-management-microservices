@@ -24,6 +24,9 @@ public final class ApiResponse<T> {
     public static <T> ApiResponse<T> ok(T data) {
         return new ApiResponse<>(true, data, null);
     }
+    public static <T> ApiResponse<T> ok() {
+        return new ApiResponse<>(true, null, null);
+    }
 
     /** Error response with code and message (no details). */
     public static <T> ApiResponse<T> error(String code, String message) {
