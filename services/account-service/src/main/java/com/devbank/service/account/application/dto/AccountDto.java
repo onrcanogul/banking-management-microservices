@@ -17,4 +17,5 @@ public class AccountDto {
     private OffsetDateTime createdAt;
     private OffsetDateTime updatedAt;
     private AccountStatus status = AccountStatus.ACTIVE;
+    private boolean isDeleted;
 }

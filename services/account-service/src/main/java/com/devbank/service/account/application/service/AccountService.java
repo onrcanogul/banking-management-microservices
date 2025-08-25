@@ -30,6 +30,7 @@ public class AccountService {
 
     public AccountDto create(AccountDto dto) {
         dto.setId(null);
+        //todo create ledger
         Account account = objectMapper.convertValue(dto, Account.class);
         return objectMapper.convertValue(repository.save(account), AccountDto.class);
     }

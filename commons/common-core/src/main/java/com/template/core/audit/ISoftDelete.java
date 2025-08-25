@@ -10,10 +10,4 @@ import java.time.Instant;
 public interface ISoftDelete {
     boolean isDeleted();
     void setDeleted(boolean deleted);
-
-    Instant getDeletedAt();
-    void setDeletedAt(Instant deletedAt);
-
-    String getDeletedBy();
-    void setDeletedBy(String deletedBy);
 }

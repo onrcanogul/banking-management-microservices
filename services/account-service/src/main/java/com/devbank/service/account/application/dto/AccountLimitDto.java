@@ -18,4 +18,5 @@ public class AccountLimitDto {
     private OffsetDateTime effectiveFrom;
     private OffsetDateTime effectiveTo;
     private Long version;
+    private boolean isDeleted;
 }

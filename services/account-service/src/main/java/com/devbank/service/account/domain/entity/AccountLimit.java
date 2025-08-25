@@ -1,17 +1,24 @@
 package com.devbank.service.account.domain.entity;
 
+import com.template.core.audit.ISoftDelete;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.UuidGenerator;
+import org.hibernate.annotations.Where;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.UUID;
 
 @Entity
+@Getter @Setter
 @Table(name = "ACCOUNT_LIMIT",
         uniqueConstraints = @UniqueConstraint(name = "UK_ACC_LIMIT_ACCOUNT", columnNames = "ACCOUNT_ID"))
-public class AccountLimit {
-
+@Where(clause = "IS_DELETED=0")
+@SQLDelete(sql = "UPDATE ACCOUNT SET IS_DELETED=1, DELETED_AT=SYSTIMESTAMP WHERE ID=?")
+public class AccountLimit implements ISoftDelete {
     @Id
     @UuidGenerator
     @Column(name = "ID", columnDefinition = "RAW(16)")
@@ -43,4 +50,7 @@ public class AccountLimit {
     @Version
     @Column(name = "ROW_VERSION")
     private Long version;
+
+    @Column(name = "IS_DELETED", columnDefinition = "NUMBER(1)", nullable = false)
+    private boolean isDeleted;
 }
