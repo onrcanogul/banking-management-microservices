@@ -4,7 +4,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import java.util.Map;
 
-@ConfigurationProperties(prefix = "acme.obs")
+@ConfigurationProperties(prefix = "devbank.obs")
 public class ObservabilityProperties {
 
     private boolean addTraceResponseHeader = true;

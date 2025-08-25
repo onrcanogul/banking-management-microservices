@@ -3,7 +3,7 @@ package com.template.kafka.property;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /** Starter-level knobs for retry/DLT and deserialization. */
-@ConfigurationProperties(prefix = "acme.messaging.kafka")
+@ConfigurationProperties(prefix = "devbank.messaging.kafka")
 public class KafkaMessagingProperties {
     /** Max attempts including first try. */
     private int maxAttempts = 5;

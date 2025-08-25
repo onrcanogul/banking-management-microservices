@@ -1,6 +1,9 @@
 package com.template.persistence;
 
+import com.template.persistence.property.OracleDsProperties;
 import com.template.persistence.property.PersistenceProperties;
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 
@@ -14,12 +17,13 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.support.TransactionTemplate;
 
+import javax.sql.DataSource;
 import java.util.Map;
 import java.util.Optional;
 
 @AutoConfiguration
 @ConditionalOnClass(EntityManagerFactoryBuilder.class) // JPA classpath'te ise aktif
-@EnableConfigurationProperties(PersistenceProperties.class)
+@EnableConfigurationProperties({PersistenceProperties.class, OracleDsProperties.class})
 public class PersistenceAutoConfiguration {
 
     @Bean
@@ -58,6 +62,17 @@ public class PersistenceAutoConfiguration {
         AuditorAware<String> auditorAware() {
             return () -> Optional.of("SYSTEM");
         }
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    DataSource dataSource(OracleDsProperties p) {
+        HikariConfig cfg = new HikariConfig();
+        cfg.setJdbcUrl(p.getUrl());
+        cfg.setUsername(p.getUsername());
+        cfg.setPassword(p.getPassword());
+        cfg.setMaximumPoolSize(p.getPoolSize());
+        return new HikariDataSource(cfg);
     }
 }
 

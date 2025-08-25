@@ -1,0 +1,18 @@
+package com.devbank.service.account.domain.application.dto;
+
+import com.devbank.service.account.domain.entity.Account;
+import com.devbank.service.account.domain.enumeration.AccountStatus;
+import lombok.Data;
+
+import java.time.OffsetDateTime;
+import java.util.UUID;
+
+@Data
+public class AccountStatusHistoryDto {
+    private UUID id;
+    private Account account;
+    private AccountStatus oldStatus;
+    private AccountStatus newStatus;
+    private OffsetDateTime changedAt;
+    private String reason;
+}

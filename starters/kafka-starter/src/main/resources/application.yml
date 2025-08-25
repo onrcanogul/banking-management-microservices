@@ -1,11 +1,4 @@
 
-acme:
-  messaging:
-    kafka:
-      max-attempts: 5
-      backoff-ms: 200
-
-
 
 #spring: to services
 #  kafka:
@@ -27,3 +20,8 @@ acme:
 #
 #management.tracing.sampling.probability: 1.0
 #management.otlp.tracing.endpoint: http://localhost:4317
+#devbank:
+#  messaging:
+#    kafka:
+#      max-attempts: 5
+#      backoff-ms: 200

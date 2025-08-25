@@ -2,7 +2,7 @@ package com.template.persistence.property;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-@ConfigurationProperties(prefix = "acme.persistence")
+@ConfigurationProperties(prefix = "devbank.persistence")
 public class PersistenceProperties {
 
     private boolean openInView = false;

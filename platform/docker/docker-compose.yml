@@ -8,27 +8,29 @@ volumes:
   grafana_data: {}
   zookeeper_data: {}
   kafka_data: {}
+  oracle_data: {}
 
 services:
   # ---------- Database ----------
-  postgres:
-    image: postgres:16-alpine
-    container_name: dev-postgres
+  oracle:
+    image: gvenzl/oracle-free:latest
+    container_name: dev-oracle
     restart: unless-stopped
     environment:
-      POSTGRES_USER: app
-      POSTGRES_PASSWORD: app
-      POSTGRES_DB: appdb
+      ORACLE_PASSWORD: oracle
+      APP_USER: ACCOUNT
+      APP_USER_PASSWORD: account
     ports:
-      - "5432:5432"
+      - "1521:1521"
     volumes:
-      - pg_data:/var/lib/postgresql/data
+      - oracle_data:/opt/oracle/oradata
+    shm_size: "1g"
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U app -d appdb"]
-      interval: 5s
-      timeout: 3s
-      retries: 20
-    networks: [devnet]
+      test: [ "CMD-SHELL", "echo 'SELECT 1 FROM DUAL;' | sqlplus -s system/oracle@//127.0.0.1:1521/XEPDB1 | grep -q 1" ]
+      interval: 15s
+      timeout: 5s
+      retries: 40
+    networks: [ devnet ]
 
   # ---------- Messaging (ZooKeeper + Kafka + UI) ----------
   zookeeper:
@@ -90,44 +92,44 @@ services:
     networks: [devnet]
 
   # ---------- Observability ----------
-  jaeger:
-    image: jaegertracing/all-in-one:1.58
-    container_name: dev-jaeger
-    restart: unless-stopped
-    environment:
-      COLLECTOR_OTLP_ENABLED: "true"
-    ports:
-      - "16686:16686" # UI
-      - "4317:4317"   # OTLP gRPC
-      - "4318:4318"   # OTLP HTTP
-    networks: [devnet]
-
-  prometheus:
-    image: prom/prometheus:v2.53.0
-    container_name: dev-prometheus
-    restart: unless-stopped
-    volumes:
-      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
-    ports:
-      - "9090:9090"
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-    command:
-      - "--config.file=/etc/prometheus/prometheus.yml"
-      - "--storage.tsdb.retention.time=15d"
-    networks: [devnet]
-
-  grafana:
-    image: grafana/grafana:10.4.5
-    container_name: dev-grafana
-    restart: unless-stopped
-    environment:
-      GF_SECURITY_ADMIN_PASSWORD: admin
-      GF_USERS_DEFAULT_THEME: light
-    ports:
-      - "3000:3000"
-    volumes:
-      - grafana_data:/var/lib/grafana
-    depends_on:
-      - prometheus
-    networks: [devnet]
+#  jaeger:
+#    image: jaegertracing/all-in-one:1.58
+#    container_name: dev-jaeger
+#    restart: unless-stopped
+#    environment:
+#      COLLECTOR_OTLP_ENABLED: "true"
+#    ports:
+#      - "16686:16686" # UI
+#      - "4317:4317"   # OTLP gRPC
+#      - "4318:4318"   # OTLP HTTP
+#    networks: [devnet]
+#
+#  prometheus:
+#    image: prom/prometheus:v2.53.0
+#    container_name: dev-prometheus
+#    restart: unless-stopped
+#    volumes:
+#      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+#    ports:
+#      - "9090:9090"
+#    extra_hosts:
+#      - "host.docker.internal:host-gateway"
+#    command:
+#      - "--config.file=/etc/prometheus/prometheus.yml"
+#      - "--storage.tsdb.retention.time=15d"
+#    networks: [devnet]
+#
+#  grafana:
+#    image: grafana/grafana:10.4.5
+#    container_name: dev-grafana
+#    restart: unless-stopped
+#    environment:
+#      GF_SECURITY_ADMIN_PASSWORD: admin
+#      GF_USERS_DEFAULT_THEME: light
+#    ports:
+#      - "3000:3000"
+#    volumes:
+#      - grafana_data:/var/lib/grafana
+#    depends_on:
+#      - prometheus
+#    networks: [devnet]

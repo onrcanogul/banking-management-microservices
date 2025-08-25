@@ -6,17 +6,23 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="example-service" />
-        <module name="common-test" />
-        <module name="persistence-starter" />
-        <module name="observability-starter" />
         <module name="security-starter" />
-        <module name="common-messaging" />
-        <module name="common-web" />
-        <module name="kafka-starter" />
-        <module name="common-core" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="common-core" target="21" />
+      <module name="common-messaging" target="21" />
+      <module name="common-test" target="21" />
+      <module name="common-web" target="21" />
+      <module name="commons" target="1.5" />
+      <module name="enterprise-template" target="1.5" />
+      <module name="example-service" target="21" />
+      <module name="kafka-starter" target="21" />
+      <module name="observability-starter" target="21" />
+      <module name="persistence-starter" target="21" />
+      <module name="services" target="1.5" />
+      <module name="starters" target="1.5" />
+    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">

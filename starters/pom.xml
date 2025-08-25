@@ -16,7 +16,6 @@
 
     <modules>
         <module>observability-starter</module>
-        <module>security-starter</module>
         <module>persistence-starter</module>
         <module>kafka-starter</module>
     </modules>
