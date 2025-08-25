@@ -6,9 +6,12 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="account-service" />
         <module name="example-service" />
+        <module name="common-web" />
+        <module name="kafka-starter" />
+        <module name="account-service" />
         <module name="security-starter" />
+        <module name="common-core" />
       </profile>
     </annotationProcessing>
   </component>

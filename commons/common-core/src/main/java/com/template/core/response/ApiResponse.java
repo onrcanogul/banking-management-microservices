@@ -1,5 +1,6 @@
 package com.template.core.response;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
 
 import java.util.Map;
@@ -11,6 +12,7 @@ import java.util.Objects;
  * Can be returned directly from controllers in a web layer.
  */
 @Getter
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public final class ApiResponse<T> {
     private final boolean success;
     private final T data;

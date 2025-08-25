@@ -10,15 +10,11 @@ public final class SoftDelete {
 
     public static <T extends ISoftDelete> T markDeleted(T entity, String by) {
         entity.setDeleted(true);
-        entity.setDeletedAt(Instant.now());
-        entity.setDeletedBy(by);
         return entity;
     }
 
     public static <T extends ISoftDelete> T restore(T entity) {
         entity.setDeleted(false);
-        entity.setDeletedAt(null);
-        entity.setDeletedBy(null);
         return entity;
     }
 

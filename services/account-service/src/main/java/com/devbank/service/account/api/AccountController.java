@@ -1,6 +1,7 @@
 package com.devbank.service.account.api;
 
 import com.devbank.service.account.application.dto.AccountDto;
+import com.devbank.service.account.application.dto.UpdateStatusDto;
 import com.devbank.service.account.application.service.AccountService;
 import com.template.core.response.ApiResponse;
 import org.springframework.http.ResponseEntity;
@@ -9,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/account")
+@RequestMapping(path = "/api/account")
 public class AccountController {
     private final AccountService service;
 
@@ -28,13 +29,18 @@ public class AccountController {
     }
 
     @PostMapping
-    public ResponseEntity<ApiResponse<AccountDto>> create(AccountDto model) {
+    public ResponseEntity<ApiResponse<AccountDto>> create(@RequestBody AccountDto model) {
         return ResponseEntity.status(201).body(ApiResponse.ok(service.create(model)));
     }
 
     @PutMapping
     public ResponseEntity<ApiResponse<AccountDto>> update(AccountDto model) {
         return ResponseEntity.status(200).body(ApiResponse.ok(service.update(model)));
+    }
+
+    @PutMapping("status")
+    public ResponseEntity<ApiResponse<AccountDto>> updateStatus(@RequestBody UpdateStatusDto model) {
+        return ResponseEntity.status(200).body(ApiResponse.ok(service.updateStatus(model)));
     }
 
     @DeleteMapping("{id}")
