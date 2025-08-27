@@ -11,5 +11,10 @@
 	<packaging>jar</packaging>
 	<dependencies>
 		<!-- no hard framework deps -->
-	</dependencies>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
 </project>

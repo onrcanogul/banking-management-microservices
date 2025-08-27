@@ -1,8 +1,9 @@
 package com.template.kafka.publisher;
 
 import com.template.messaging.constant.MessageHeaders;
-import com.template.messaging.event.EventWrapper;
+import com.template.messaging.base.wrapper.EventWrapper;
 import com.template.core.tracing.TraceContext;
+import com.template.messaging.event.Event;
 import org.springframework.kafka.core.KafkaTemplate;
 
 import java.time.Instant;
@@ -20,7 +21,7 @@ public class EventPublisher {
         this.source = source;
     }
 
-    public <T> void publish(String topic, String type, T payload, Map<String,String> headers) {
+    public <T extends Event> void publish(String topic, String type, T payload, Map<String,String> headers) {
         Map<String,String> h = new LinkedHashMap<>();
         if (headers != null) h.putAll(headers);
         TraceContext.traceId().ifPresent(t -> h.putIfAbsent(MessageHeaders.TRACE_ID, t));
@@ -32,7 +33,7 @@ public class EventPublisher {
         template.send(topic, key, env);
     }
 
-    public <T> void publish(String topic, String type, T payload) {
+    public <T extends Event> void publish(String topic, String type, T payload) {
         publish(topic, type, payload, Map.of());
     }
 }

@@ -76,7 +76,6 @@ public class AccountService {
             return objectMapper.convertValue(createdAccount, AccountDto.class);
         }
         return objectMapper.convertValue(account, AccountDto.class);
-
     }
 
     public void delete(UUID id) {

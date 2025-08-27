@@ -1,6 +1,6 @@
 package com.template.kafka;
 
-import com.template.messaging.event.EventWrapper;
+import com.template.messaging.base.wrapper.EventWrapper;
 import com.template.core.exception.BusinessException;
 import com.template.kafka.property.KafkaMessagingProperties;
 import com.template.kafka.publisher.EventPublisher;
