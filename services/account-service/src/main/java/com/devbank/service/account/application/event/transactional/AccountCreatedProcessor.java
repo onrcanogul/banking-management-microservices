@@ -1,4 +1,4 @@
-package com.devbank.service.account.application.event.processor;
+package com.devbank.service.account.application.event.transactional;
 
 import com.devbank.service.account.application.service.AccountService;
 import com.template.messaging.event.account.process.AccountCreatedEvent;

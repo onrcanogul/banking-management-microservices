@@ -1,0 +1,72 @@
+spring:
+  application:
+    name: ledger-service
+
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.OracleDialect
+        jdbc:
+          time_zone: UTC
+        order_inserts: true
+        order_updates: true
+        jdbc.batch_size: 50
+
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP:localhost:19092}
+    producer:
+      acks: all
+      properties:
+        enable.idempotence: true
+        linger.ms: 5
+        compression.type: zstd
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+    consumer:
+      group-id: ${spring.application.name}
+      auto-offset-reset: latest
+      properties:
+        isolation.level: read_committed
+      #        spring.json.trusted.packages: "com.devbank.*"
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
+  endpoint:
+    health:
+      show-details: when_authorized
+  metrics:
+    tags:
+      app: ${spring.application.name}
+      env: ${APP_ENV:${spring.profiles.active:dev}}
+    distribution:
+      percentiles-histogram:
+        http.server.requests: true
+  tracing:
+    sampling.probability: 0.10
+
+
+devbank:
+  datasource:
+    url: jdbc:oracle:thin:@//localhost:1522/FREEPDB1
+    username: LEDGER
+    password: ledger
+    pool-size: 10
+  messaging:
+    kafka:
+      max-attempts: 5
+      backoff-ms: 200
+  obs:
+    add-trace-response-header: true
+    max-unique-http-uris: 200
+    tracing:
+      enabled: true
+      otlp-enabled: false
+      otlp-endpoint: http://otel-collector:4317

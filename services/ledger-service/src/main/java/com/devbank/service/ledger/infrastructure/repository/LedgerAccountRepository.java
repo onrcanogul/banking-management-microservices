@@ -1,6 +1,5 @@
 package com.devbank.service.ledger.infrastructure.repository;
 
-import com.devbank.service.ledger.application.dto.LedgerAccountDto;
 import com.devbank.service.ledger.domain.entity.LedgerAccount;
 import org.springframework.data.jpa.repository.JpaRepository;
 
