@@ -6,7 +6,6 @@ import com.template.messaging.constant.MessageHeaders;
 import com.template.messaging.event.Event;
 import com.template.starter.outbox.entity.Outbox;
 import com.template.starter.outbox.repository.OutboxRepository;
-import com.template.starter.outbox.util.EventClassResolver;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,23 +21,26 @@ public class OutboxProcessor {
     private final OutboxRepository repository;
     private final EventPublisher publisher;
     private final ObjectMapper objectMapper;
-    private final EventClassResolver resolver;
 
-    public OutboxProcessor(OutboxRepository repository, EventPublisher publisher, ObjectMapper objectMapper, EventClassResolver resolver) {
+    public OutboxProcessor(OutboxRepository repository, EventPublisher publisher, ObjectMapper objectMapper) {
         this.repository = repository;
         this.publisher = publisher;
         this.objectMapper = objectMapper;
-        this.resolver = resolver;
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public void processAsync() {
         List<Outbox> outboxes = repository.findByPublishedFalse();
-
         for (Outbox outbox : outboxes) {
             try {
-
-                Event eventObj = objectMapper.readValue(outbox.getPayload(), resolver.resolve(outbox.getType()));
+                Class<?> raw = Class.forName(outbox.getType());
+                if (!Event.class.isAssignableFrom(raw)) {
+                    throw new IllegalArgumentException("Type is not an Event: " + raw.getName());
+                }
+                @SuppressWarnings("unchecked")
+                Class<? extends Event> clazz = (Class<? extends Event>) raw;
+                Event eventObj = objectMapper.readValue(outbox.getPayload(), clazz);
+                publisher.publish(outbox.getDestination(), outbox.getType(), eventObj, createHeader(outbox));
                 publisher.publish(outbox.getDestination(), outbox.getType(), eventObj , createHeader(outbox))
                         .thenAccept(sr -> markPublishedNow(outbox.getId()))
                         .exceptionally(ex -> {logFailure(outbox, ex); return null;});

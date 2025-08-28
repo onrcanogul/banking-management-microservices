@@ -10,5 +10,9 @@ import java.util.UUID;
 @Getter @Setter
 @AllArgsConstructor
 public class LedgerAccountCreatedEvent implements Event {
+    private UUID accountId;
     private UUID ledgerAccountId;
+    public LedgerAccountCreatedEvent(UUID ledgerAccountId) {
+        
+    }
 }

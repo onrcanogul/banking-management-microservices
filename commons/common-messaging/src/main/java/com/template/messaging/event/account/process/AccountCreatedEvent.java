@@ -12,4 +12,5 @@ import java.util.UUID;
 @AllArgsConstructor
 public class AccountCreatedEvent implements Event {
     private UUID accountId;
+    private String currency;
 }

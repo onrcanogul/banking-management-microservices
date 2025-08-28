@@ -5,26 +5,31 @@ import com.devbank.service.ledger.application.event.producer.LedgerAccountCreate
 import com.devbank.service.ledger.domain.entity.LedgerAccount;
 import com.devbank.service.ledger.domain.enumeration.LedgerAccountStatus;
 import com.devbank.service.ledger.infrastructure.repository.LedgerAccountRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.template.messaging.event.ledger.process.LedgerAccountCreatedEvent;
+import com.template.starter.outbox.repository.OutboxRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.OffsetDateTime;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @Service
 public class LedgerAccountService {
     private final LedgerAccountRepository repository;
     private final LedgerAccountCreatedProcessor ledgerAccountCreatedProcessor;
+    private final OutboxRepository outboxRepository;
     //todo object mapper will be replaced by another mapper
     private final ObjectMapper objectMapper;
 
-    public LedgerAccountService(LedgerAccountRepository repository, LedgerAccountCreatedProcessor ledgerAccountCreatedProcessor, ObjectMapper objectMapper) {
+    public LedgerAccountService(LedgerAccountRepository repository, LedgerAccountCreatedProcessor ledgerAccountCreatedProcessor, OutboxRepository outboxRepository, ObjectMapper objectMapper) {
         this.repository = repository;
         this.ledgerAccountCreatedProcessor = ledgerAccountCreatedProcessor;
+        this.outboxRepository = outboxRepository;
         this.objectMapper = objectMapper;
     }
 
@@ -45,12 +50,13 @@ public class LedgerAccountService {
     }
 
     @Transactional
-    public LedgerAccountDto create(LedgerAccountDto model) {
+    public LedgerAccountDto create(LedgerAccountDto model) throws JsonProcessingException {
         model.setId(null);
         LedgerAccount ledgerAccount = objectMapper.convertValue(model, LedgerAccount.class);
         LedgerAccount createdLedgerAccount = repository.save(ledgerAccount);
-
-        ledgerAccountCreatedProcessor.process(new LedgerAccountCreatedEvent(createdLedgerAccount.getId()));
+        if(Objects.equals(model.getExternalRefType(), "ACCOUNT")) {
+            ledgerAccountCreatedProcessor.process(new LedgerAccountCreatedEvent(createdLedgerAccount.getId(), UUID.fromString(model.getExternalRefId()))); // save outbox
+        }
         return objectMapper.convertValue(model, LedgerAccountDto.class);
     }
 

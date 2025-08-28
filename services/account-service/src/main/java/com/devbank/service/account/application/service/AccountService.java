@@ -78,6 +78,12 @@ public class AccountService {
         return objectMapper.convertValue(account, AccountDto.class);
     }
 
+    public void addLedgerIdIntoAccount(UUID accountId, UUID ledgerAccountId) {
+        Account account = repository.findById(accountId).orElseThrow();
+        account.setLedgerAccountId(ledgerAccountId);
+        repository.save(account);
+    }
+
     public void delete(UUID id) {
         Account account = repository.findById(id).orElseThrow();
         repository.delete(account);
