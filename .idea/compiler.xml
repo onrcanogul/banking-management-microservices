@@ -15,11 +15,14 @@
         <module name="common-web" />
         <module name="kafka-starter" />
         <module name="account-service" />
+        <module name="outbox-starter" />
         <module name="common-core" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="example-service" target="21" />
+      <module name="outbox-starter.main" target="21" />
+      <module name="outbox-starter.test" target="21" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
@@ -29,6 +32,7 @@
       <module name="example-service" options="" />
       <module name="kafka-starter" options="-parameters" />
       <module name="ledger-service" options="-parameters" />
+      <module name="outbox-starter" options="-parameters" />
     </option>
   </component>
 </project>
