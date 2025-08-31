@@ -18,6 +18,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
+import static java.util.stream.Collectors.toList;
+
 @Service
 public class LedgerAccountService {
     private final LedgerAccountRepository repository;
@@ -33,12 +35,8 @@ public class LedgerAccountService {
         this.objectMapper = objectMapper;
     }
 
-    public List<LedgerAccountDto> getByReferenceId(String referenceId) {
-        return repository
-                .findByExternalRefId(referenceId)
-                .stream()
-                .map(a -> objectMapper.convertValue(a, LedgerAccountDto.class))
-                .toList();
+    public LedgerAccountDto getByReferenceId(String referenceId) {
+        return objectMapper.convertValue(repository.findByExternalRefId(referenceId), LedgerAccountDto.class);
     }
 
     public List<LedgerAccountDto> getByReferenceIdAndDate(String referenceId, OffsetDateTime date) {

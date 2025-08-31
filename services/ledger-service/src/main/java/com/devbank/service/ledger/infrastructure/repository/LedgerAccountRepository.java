@@ -10,6 +10,6 @@ import java.util.UUID;
 
 @Repository
 public interface LedgerAccountRepository extends JpaRepository<LedgerAccount, UUID> {
-    List<LedgerAccount> findByExternalRefId(String externalRefId);
+    LedgerAccount findByExternalRefId(String externalRefId);
     List<LedgerAccount> findByExternalRefIdAndCreatedAtAfter(String externalRefId, OffsetDateTime createdAt);
 }

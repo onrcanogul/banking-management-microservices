@@ -7,5 +7,6 @@ public record CreateTransferDto (UUID from,
                                  UUID to,
                                  String currency,
                                  BigDecimal amount,
-                                 String externalRef) {
+                                 String externalRef,
+                                 String description) {
 }

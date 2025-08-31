@@ -2,10 +2,14 @@ package com.devbank.service.ledger.application.services;
 
 import com.devbank.service.ledger.application.dto.CreateLedgerEntryDto;
 import com.devbank.service.ledger.application.dto.LedgerEntryDto;
+import com.devbank.service.ledger.application.event.producer.LedgerAccountCreatedProcessor;
+import com.devbank.service.ledger.application.event.transactional.transfer.LedgerAccountNotFoundEventProcessor;
 import com.devbank.service.ledger.domain.entity.LedgerEntry;
 import com.devbank.service.ledger.infrastructure.repository.LedgerAccountRepository;
 import com.devbank.service.ledger.infrastructure.repository.LedgerEntryRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.template.messaging.event.ledger.rollback.LedgerAccountNotFoundEvent;
+import org.apache.coyote.BadRequestException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,11 +22,15 @@ public class LedgerEntryService {
     private final LedgerEntryRepository repository;
     private final LedgerAccountRepository ledgerAccountRepository;
     private final ObjectMapper objectMapper;
+    private final LedgerAccountNotFoundEventProcessor ledgerAccountNotFoundEventProcessor;
+    private final LedgerAccountCreatedProcessor ledgerAccountCreatedProcessor;
 
-    public LedgerEntryService(LedgerEntryRepository repository, LedgerAccountRepository ledgerAccountRepository, ObjectMapper objectMapper) {
+    public LedgerEntryService(LedgerEntryRepository repository, LedgerAccountRepository ledgerAccountRepository, ObjectMapper objectMapper, LedgerAccountNotFoundEventProcessor ledgerAccountNotFoundEventProcessor, LedgerAccountCreatedProcessor ledgerAccountCreatedProcessor) {
         this.repository = repository;
         this.ledgerAccountRepository = ledgerAccountRepository;
         this.objectMapper = objectMapper;
+        this.ledgerAccountNotFoundEventProcessor = ledgerAccountNotFoundEventProcessor;
+        this.ledgerAccountCreatedProcessor = ledgerAccountCreatedProcessor;
     }
 
     public LedgerEntryDto getById(UUID id) {
@@ -45,7 +53,13 @@ public class LedgerEntryService {
     }
 
     @Transactional
-    public LedgerEntryDto create(CreateLedgerEntryDto model) {
+    public LedgerEntryDto create(CreateLedgerEntryDto model) throws BadRequestException {
+        var debitAccount = ledgerAccountRepository.findByExternalRefId(model.getFromAccountId().toString());
+        var creditAccount = ledgerAccountRepository.findByExternalRefId(model.getToAccountId().toString());
+        if (debitAccount == null || creditAccount == null) {
+            ledgerAccountNotFoundEventProcessor.process(new LedgerAccountNotFoundEvent(model.getTransferId()));
+            return null;
+        }
         LedgerEntry transfer = repository.save(factory(model));
         return objectMapper.convertValue(transfer, LedgerEntryDto.class);
     }

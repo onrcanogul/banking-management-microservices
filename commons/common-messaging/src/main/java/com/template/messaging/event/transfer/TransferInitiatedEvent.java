@@ -17,4 +17,5 @@ public class TransferInitiatedEvent implements Event {
     private String currency;
     private BigDecimal amount;
     private String externalRef;
+    private String description;
 }

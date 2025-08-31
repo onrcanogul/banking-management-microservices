@@ -21,7 +21,7 @@ public class LedgerAccountController {
     }
 
     @GetMapping("ref/{refId}")
-    private ResponseEntity<ApiResponse<List<LedgerAccountDto>>> getByReference(@PathVariable String refId) {
+    private ResponseEntity<ApiResponse<LedgerAccountDto>> getByReference(@PathVariable String refId) {
         return ResponseEntity.ok(ApiResponse.ok(service.getByReferenceId(refId)));
     }
 

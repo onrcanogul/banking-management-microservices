@@ -9,6 +9,7 @@ import com.devbank.service.transfer.infrastructure.repository.TransferRepository
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.template.messaging.event.transfer.TransferInitiatedEvent;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.UUID;
@@ -36,16 +37,19 @@ public class TransferService {
         return transfers.stream().map(t -> objectMapper.convertValue(t, TransferDto.class)).toList();
     }
 
+    @Transactional
     public TransferDto create(CreateTransferDto model) {
         Transfer transfer = Transfer.create(model.from(), model.to(), model.currency(), model.amount(), model.externalRef());
         Transfer createdTransfer = repository.save(transfer);
         transferInitiatedProcessor.process(new TransferInitiatedEvent(
                 createdTransfer.getId(), createdTransfer.getFromAccountId(), createdTransfer.getToAccountId(),
-                createdTransfer.getCurrency(), createdTransfer.getAmount(), createdTransfer.getExternalRef()
+                createdTransfer.getCurrency(), createdTransfer.getAmount(), createdTransfer.getExternalRef(),
+                model.description()
         ));
         return objectMapper.convertValue(createdTransfer, TransferDto.class);
     }
 
+    @Transactional
     public TransferDto updateStatus(UUID id, TransferStatus status) {
         Transfer transfer = repository.findById(id).orElseThrow();
         transfer.setStatus(status);
