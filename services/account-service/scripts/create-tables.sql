@@ -84,3 +84,25 @@ CREATE INDEX IX_ACC_STATUS_ACCOUNT_DT ON ACCOUNT_STATUS_HISTORY (ACCOUNT_ID, CHA
 CREATE INDEX IX_ACC_STATUS_ACTIVE     ON ACCOUNT_STATUS_HISTORY (IS_DELETED);
 
 COMMENT ON TABLE ACCOUNT_STATUS_HISTORY IS 'Hesap durum değişikliklerinin geçmişi.';
+
+
+-- ======================
+-- OUTBOX TABLE
+-- ======================
+CREATE TABLE OUTBOX (
+                        ID              RAW(16) DEFAULT SYS_GUID() NOT NULL,
+                        AGGREGATETYPE   VARCHAR2(255 CHAR),
+                        AGGREGATEID     VARCHAR2(255 CHAR),
+                        TYPE            VARCHAR2(255 CHAR),
+                        PAYLOAD         CLOB,
+                        DESTINATION     VARCHAR2(255 CHAR),
+                        IS_PUBLISHED    NUMBER(1,0) DEFAULT 0 NOT NULL,
+                        CREATED_AT      TIMESTAMP WITH TIME ZONE DEFAULT SYSTIMESTAMP NOT NULL,
+
+                        CONSTRAINT PK_OUTBOX PRIMARY KEY (ID),
+                        CONSTRAINT CK_OUTBOX_IS_PUBLISHED CHECK (IS_PUBLISHED IN (0,1))
+);
+
+CREATE INDEX IX_IS_PUBLISHED ON OUTBOX (IS_PUBLISHED);
+
+ALTER TABLE outbox ADD dtype VARCHAR2(31);

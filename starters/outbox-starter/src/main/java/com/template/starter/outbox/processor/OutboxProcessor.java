@@ -40,7 +40,6 @@ public class OutboxProcessor {
                 @SuppressWarnings("unchecked")
                 Class<? extends Event> clazz = (Class<? extends Event>) raw;
                 Event eventObj = objectMapper.readValue(outbox.getPayload(), clazz);
-                publisher.publish(outbox.getDestination(), outbox.getType(), eventObj, createHeader(outbox));
                 publisher.publish(outbox.getDestination(), outbox.getType(), eventObj , createHeader(outbox))
                         .thenAccept(sr -> markPublishedNow(outbox.getId()))
                         .exceptionally(ex -> {logFailure(outbox, ex); return null;});

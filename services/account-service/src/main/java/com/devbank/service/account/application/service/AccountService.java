@@ -3,10 +3,12 @@ package com.devbank.service.account.application.service;
 import com.devbank.service.account.application.dto.AccountDto;
 import com.devbank.service.account.application.dto.AccountStatusHistoryDto;
 import com.devbank.service.account.application.dto.UpdateStatusDto;
+import com.devbank.service.account.application.event.transactional.create.AccountCreatedProducer;
 import com.devbank.service.account.domain.entity.Account;
 import com.devbank.service.account.domain.enumeration.AccountStatus;
 import com.devbank.service.account.infrastructure.repository.AccountRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.template.messaging.event.account.process.AccountCreatedEvent;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,11 +20,13 @@ public class AccountService {
     private final AccountRepository repository;
     private final ObjectMapper objectMapper;
     private final AccountStatusHistoryService accountStatusHistoryService;
+    private final AccountCreatedProducer accountCreatedProducer;
 
-    public AccountService(AccountRepository repository, ObjectMapper objectMapper, AccountStatusHistoryService accountStatusHistoryService) {
+    public AccountService(AccountRepository repository, ObjectMapper objectMapper, AccountStatusHistoryService accountStatusHistoryService, AccountCreatedProducer accountCreatedProducer) {
         this.repository = repository;
         this.objectMapper = objectMapper;
         this.accountStatusHistoryService = accountStatusHistoryService;
+        this.accountCreatedProducer = accountCreatedProducer;
     }
 
     public AccountDto getById(UUID id) {
@@ -38,6 +42,7 @@ public class AccountService {
     @Transactional
     public AccountDto create(AccountDto dto) {
         dto.setId(null);
+
         Account account = objectMapper.convertValue(dto, Account.class);
         Account createdAccount = repository.save(account);
         AccountDto accountDto = objectMapper.convertValue(createdAccount, AccountDto.class);
@@ -49,6 +54,8 @@ public class AccountService {
                 .oldStatus(AccountStatus.CLOSED)
                 .reason("First Creation")
                 .build());
+
+        accountCreatedProducer.process(new AccountCreatedEvent(createdAccount.getId(), createdAccount.getCurrency()));
 
         return accountDto;
     }

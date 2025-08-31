@@ -70,3 +70,5 @@ devbank:
       enabled: true
       otlp-enabled: false
       otlp-endpoint: http://otel-collector:4317
+server:
+  port: 8081
