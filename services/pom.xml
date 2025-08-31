@@ -17,5 +17,6 @@
     <modules>
         <module>account-service</module>
         <module>ledger-service</module>
+        <module>transfer-service</module>
     </modules>
 </project>
