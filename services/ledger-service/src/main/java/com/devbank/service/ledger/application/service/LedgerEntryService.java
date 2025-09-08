@@ -1,4 +1,4 @@
-package com.devbank.service.ledger.application.services;
+package com.devbank.service.ledger.application.service;
 
 import com.devbank.service.ledger.application.dto.CreateLedgerEntryDto;
 import com.devbank.service.ledger.application.dto.LedgerEntryDto;

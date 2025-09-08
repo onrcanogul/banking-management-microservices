@@ -6,9 +6,10 @@ import lombok.NoArgsConstructor;
 
 import java.time.Instant;
 import java.util.Map;
+import java.util.UUID;
 
 public record EventWrapper<T extends Event> (
-        String id,
+        UUID id,
         String type,
         String source,
         Instant time,

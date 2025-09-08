@@ -1,7 +1,7 @@
 package com.devbank.service.ledger.api;
 
 import com.devbank.service.ledger.application.dto.LedgerEntryDto;
-import com.devbank.service.ledger.application.services.LedgerEntryService;
+import com.devbank.service.ledger.application.service.LedgerEntryService;
 import com.template.core.response.ApiResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

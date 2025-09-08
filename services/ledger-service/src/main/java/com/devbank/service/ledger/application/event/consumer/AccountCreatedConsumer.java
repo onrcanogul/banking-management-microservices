@@ -1,38 +1,41 @@
 package com.devbank.service.ledger.application.event.consumer;
 
-import com.devbank.service.ledger.application.dto.LedgerAccountDto;
-import com.devbank.service.ledger.application.services.LedgerAccountService;
-import com.devbank.service.ledger.domain.enumeration.LedgerAccountStatus;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.template.messaging.base.consumer.Consumer;
 import com.template.messaging.base.wrapper.EventWrapper;
 import com.template.messaging.event.account.process.AccountCreatedEvent;
+import com.template.starter.inbox.entity.Inbox;
+import com.template.starter.inbox.repository.InboxRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
+
 @Slf4j
 @Component
 public class AccountCreatedConsumer implements Consumer<AccountCreatedEvent> {
-    private final LedgerAccountService ledgerAccountService;
+    private final ObjectMapper objectMapper;
+    private final InboxRepository inboxRepository;
 
-    public AccountCreatedConsumer(LedgerAccountService ledgerAccountService) {
-        this.ledgerAccountService = ledgerAccountService;
+    public AccountCreatedConsumer(ObjectMapper objectMapper, InboxRepository inboxRepository) {
+        this.objectMapper = objectMapper;
+        this.inboxRepository = inboxRepository;
     }
 
     @Override
     @KafkaListener(topics = "account.created", containerFactory = "kafkaListenerContainerFactory")
     public void consume(EventWrapper<AccountCreatedEvent> payload) {
+        if(inboxRepository.findByIdempotentToken(payload.id()).isEmpty()) return;
         try {
-            var event = payload.event();
-            LedgerAccountDto ledgerAccountDto = LedgerAccountDto
-                    .builder()
-                    .currency(event.getCurrency())
-                    .externalRefType("ACCOUNT")
-                    .externalRefId(event.getAccountId().toString())
-                    .status(LedgerAccountStatus.ACTIVE)
-                    .build();
-            ledgerAccountService.create(ledgerAccountDto);
+            inboxRepository.save(Inbox.builder()
+                    .receivedAt(LocalDateTime.now())
+                    .type(payload.type())
+                    .processed(false)
+                    .idempotentToken(payload.id())
+                    .payload(objectMapper.writeValueAsString(payload.event()))
+                    .build());
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }

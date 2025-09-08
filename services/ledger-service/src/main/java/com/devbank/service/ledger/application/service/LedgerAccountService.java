@@ -1,4 +1,4 @@
-package com.devbank.service.ledger.application.services;
+package com.devbank.service.ledger.application.service;
 
 import com.devbank.service.ledger.application.dto.LedgerAccountDto;
 import com.devbank.service.ledger.application.event.producer.LedgerAccountCreatedProcessor;
@@ -17,8 +17,6 @@ import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
-
-import static java.util.stream.Collectors.toList;
 
 @Service
 public class LedgerAccountService {

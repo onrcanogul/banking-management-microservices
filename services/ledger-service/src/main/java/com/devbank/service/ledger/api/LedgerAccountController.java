@@ -2,7 +2,7 @@ package com.devbank.service.ledger.api;
 
 import com.devbank.service.ledger.application.dto.GetAccountByDateDto;
 import com.devbank.service.ledger.application.dto.LedgerAccountDto;
-import com.devbank.service.ledger.application.services.LedgerAccountService;
+import com.devbank.service.ledger.application.service.LedgerAccountService;
 import com.devbank.service.ledger.domain.enumeration.LedgerAccountStatus;
 import com.template.core.response.ApiResponse;
 import org.springframework.http.ResponseEntity;
