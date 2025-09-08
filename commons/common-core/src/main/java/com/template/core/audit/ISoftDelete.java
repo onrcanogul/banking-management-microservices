@@ -1,8 +1,6 @@
 package com.template.core.audit;
 
 
-import java.time.Instant;
-
 /**
  * Marker + contract for soft delete semantics.
  * Entities implementing this must expose deleted flags/metadata.

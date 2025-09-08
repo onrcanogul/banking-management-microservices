@@ -28,8 +28,8 @@ public class EventPublisher {
         if (headers != null) h.putAll(headers);
         TraceContext.traceId().ifPresent(t -> h.putIfAbsent(MessageHeaders.TRACE_ID, t));
 
-        String id = h.getOrDefault("id", UUID.randomUUID().toString());
-        String key = h.getOrDefault(MessageHeaders.KEY, id);
+        UUID id = UUID.fromString(h.getOrDefault("id", UUID.randomUUID().toString()));
+        String key = h.getOrDefault(MessageHeaders.KEY, id.toString());
 
         EventWrapper<T> env = new EventWrapper<>(id, type, source, Instant.now(), payload, h);
         return template.send(topic, key, env);

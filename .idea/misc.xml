@@ -6,6 +6,9 @@
       <list>
         <option value="$PROJECT_DIR$/pom.xml" />
         <option value="$PROJECT_DIR$/starters/outbox-starter/pom.xml" />
+        <option value="$PROJECT_DIR$/services/api-gateway/pom.xml" />
+        <option value="$PROJECT_DIR$/platform/api-gateway/pom.xml" />
+        <option value="$PROJECT_DIR$/platform/discovery-service/pom.xml" />
       </list>
     </option>
     <option name="ignoredFiles">
