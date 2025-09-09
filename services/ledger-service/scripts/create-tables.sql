@@ -34,6 +34,7 @@ CREATE TABLE LEDGER_ENTRY (
                               REF_TYPE       VARCHAR2(30)  NOT NULL,          -- "TRANSFER" vb.
                               REF_ID         VARCHAR2(64)  NOT NULL,          -- "REF-001"
                               DESCRIPTION    VARCHAR2(200),
+                              TYPE           VARCHAR2(100) NOT NULL,
                               CREATED_AT     TIMESTAMP WITH TIME ZONE DEFAULT SYSTIMESTAMP NOT NULL,
                               REVERSAL_OF    RAW(16),
                               CONSTRAINT PK_LEDGER_ENTRY PRIMARY KEY (ID),
@@ -83,3 +84,20 @@ CREATE TABLE OUTBOX (
 CREATE INDEX IX_IS_PUBLISHED ON OUTBOX (IS_PUBLISHED);
 
 ALTER TABLE outbox ADD dtype VARCHAR2(31);
+
+
+-- ======================
+-- INBOX TABLE
+-- ======================
+CREATE TABLE INBOX (
+                       IDEMPOTENT_TOKEN RAW(16) NOT NULL,
+                       PAYLOAD CLOB,
+                       TYPE VARCHAR2(255 CHAR),
+                       IS_PROCESSED NUMBER(1,0) DEFAULT 0 NOT NULL,
+                       RECEIVED_AT TIMESTAMP WITH TIME ZONE DEFAULT SYSTIMESTAMP NOT NULL,
+
+                       CONSTRAINT PK_INBOX PRIMARY KEY (IDEMPOTENT_TOKEN),
+                       CONSTRAINT CK_INBOX_IS_PROCESSED CHECH (IS_PROCESSED IN (0, 1))
+);
+
+CREATE INDEX IX_IS_PROCESSED ON OUTBOX (IS_PROCESSED);

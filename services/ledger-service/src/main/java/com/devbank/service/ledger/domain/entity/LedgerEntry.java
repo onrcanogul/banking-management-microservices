@@ -58,6 +58,9 @@ public class LedgerEntry {
     @Column(name = "REF_TYPE", nullable = false, length = 30)
     private String refType;
 
+    @Column(name = "TYPE", nullable = false)
+    private String type;
+
     @Column(name = "REF_ID", nullable = false, length = 64)
     private String refId;
 

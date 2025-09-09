@@ -74,6 +74,7 @@ public class LedgerEntryService {
         ledgerEntry.setRefId(model.getExternalRef());
         ledgerEntry.setDescription(model.getDescription());
         ledgerEntry.setCreatedAt(OffsetDateTime.now());
+        ledgerEntry.setType(model.getType());
 
         return ledgerEntry;
     }

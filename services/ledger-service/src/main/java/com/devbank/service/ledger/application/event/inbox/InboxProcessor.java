@@ -9,7 +9,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.template.kafka.publisher.EventPublisher;
 import com.template.messaging.event.account.process.AccountCreatedEvent;
-import com.template.messaging.event.transfer.TransferInitiatedEvent;
+import com.template.messaging.event.transaction.PaymentInitiatedEvent;
+import com.template.messaging.event.transaction.TransferInitiatedEvent;
 import com.template.starter.inbox.entity.Inbox;
 import com.template.starter.inbox.repository.InboxRepository;
 import org.apache.coyote.BadRequestException;
@@ -36,8 +37,8 @@ public class InboxProcessor {
         List<Inbox> inboxes = inboxRepository.findByProcessedFalse();
         for (Inbox inbox: inboxes) {
             String type = inbox.getType();
-            if(Objects.equals(type, TransferInitiatedEvent.class.getName())) {
-                TransferInitiatedEvent event = objectMapper.convertValue(inbox.getPayload(), TransferInitiatedEvent.class);
+            if (Objects.equals(type, TransferInitiatedEvent.class.getName())) {
+                TransferInitiatedEvent event = objectMapper.readValue(inbox.getPayload(), TransferInitiatedEvent.class);
                 ledgerEntryService.create(CreateLedgerEntryDto.builder()
                         .transferId(event.getTransferId())
                         .description("TODO ADD DESCRIPTION")
@@ -46,10 +47,11 @@ public class InboxProcessor {
                         .externalRef(event.getExternalRef())
                         .fromAccountId(event.getFromAccountId())
                         .toAccountId(event.getToAccountId())
+                        .type("TRANSFER")
                         .build());
             }
             else if (Objects.equals(type, AccountCreatedEvent.class.getName())) {
-                AccountCreatedEvent event = objectMapper.convertValue(inbox.getPayload(), AccountCreatedEvent.class);
+                AccountCreatedEvent event = objectMapper.readValue(inbox.getPayload(), AccountCreatedEvent.class);
                 LedgerAccountDto ledgerAccountDto = LedgerAccountDto
                         .builder()
                         .currency(event.getCurrency())
@@ -58,6 +60,19 @@ public class InboxProcessor {
                         .status(LedgerAccountStatus.ACTIVE)
                         .build();
                 ledgerAccountService.create(ledgerAccountDto);
+            }
+            else if (Objects.equals(type, PaymentInitiatedEvent.class.getName())) {
+                PaymentInitiatedEvent event = objectMapper.readValue(inbox.getPayload(), PaymentInitiatedEvent.class);
+                ledgerEntryService.create(CreateLedgerEntryDto.builder()
+                        .transferId(event.getPayerId())
+                        .description("TODO ADD DESCRIPTION")
+                        .amount(event.getAmount())
+                        .currency(event.getCurrency())
+                        .externalRef(event.getExternalRef())
+                        .fromAccountId(event.getMerchantId())
+                        .toAccountId(event.getMerchantId())
+                        .type("TRANSFER")
+                        .build());
             }
         }
     }
