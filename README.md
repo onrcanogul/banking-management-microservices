@@ -1,6 +1,6 @@
 <img width="1114" height="666" alt="image" src="https://github.com/user-attachments/assets/4a618b7f-adf4-43e9-a4c5-cbb73c319544" />
 
-# Banking Management (MVP)
+# Core Banking System (MVP)
 
 A minimal microservices-based banking system demonstrating **account**, **transaction**, and **ledger** management with event-driven communication.
 
