@@ -2,9 +2,8 @@ package com.devbank.service.transaction.application.service;
 
 import com.devbank.service.transaction.application.dto.CreateTransferDto;
 import com.devbank.service.transaction.application.dto.TransferTransactionDto;
-import com.devbank.service.transaction.application.event.transaction.transfer.initiate.TransferInitiatedProcessor;
+import com.devbank.service.transaction.application.event.producer.TransferInitiatedProcessor;
 import com.devbank.service.transaction.domain.entity.TransferTransaction;
-import com.devbank.service.transaction.domain.enumeration.TransactionStatus;
 import com.devbank.service.transaction.infrastructure.repository.TransferTransactionRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.template.messaging.event.transaction.TransferInitiatedEvent;
@@ -31,7 +30,6 @@ public class TransferService {
         return objectMapper.convertValue(transfer, TransferTransactionDto.class);
     }
 
-
     @Transactional
     public TransferTransactionDto create(CreateTransferDto model) {
         TransferTransaction transfer = TransferTransaction.createTransfer(model.from(), model.to(), model.currency(), model.amount(), model.externalRef());
@@ -42,13 +40,5 @@ public class TransferService {
                 model.description()
         ));
         return objectMapper.convertValue(createdTransfer, TransferTransactionDto.class);
-    }
-
-    @Transactional
-    public TransferTransactionDto updateStatus(UUID id, TransactionStatus status) {
-        TransferTransaction transfer = repository.findById(id).orElseThrow();
-        transfer.setStatus(status);
-        TransferTransaction updatedTransfer = repository.save(transfer);
-        return objectMapper.convertValue(updatedTransfer, TransferTransactionDto.class);
     }
 }

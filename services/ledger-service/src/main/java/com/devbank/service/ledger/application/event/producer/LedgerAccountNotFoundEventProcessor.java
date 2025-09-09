@@ -1,4 +1,4 @@
-package com.devbank.service.ledger.application.event.transactional.transfer;
+package com.devbank.service.ledger.application.event.producer;
 
 import com.devbank.service.ledger.domain.entity.LedgerAccount;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -26,7 +26,7 @@ public class LedgerAccountNotFoundEventProcessor implements Processor<LedgerAcco
         try {
             outboxRepository.save(Outbox.builder()
                     .type(LedgerAccountNotFoundEvent.class.getTypeName())
-                    .aggregateId(event.getTransferId().toString())
+                    .aggregateId(event.getTransactionId().toString())
                     .destination("ledger-account.not-found")
                     .payload(objectMapper.writeValueAsString(event))
                     .published(false)

@@ -1,4 +1,4 @@
-package com.devbank.service.transaction.application.event.transaction.transfer.initiate;
+package com.devbank.service.transaction.application.event.producer;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

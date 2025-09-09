@@ -3,7 +3,7 @@ package com.devbank.service.ledger.application.service;
 import com.devbank.service.ledger.application.dto.CreateLedgerEntryDto;
 import com.devbank.service.ledger.application.dto.LedgerEntryDto;
 import com.devbank.service.ledger.application.event.producer.LedgerAccountCreatedProcessor;
-import com.devbank.service.ledger.application.event.transactional.transfer.LedgerAccountNotFoundEventProcessor;
+import com.devbank.service.ledger.application.event.producer.LedgerAccountNotFoundEventProcessor;
 import com.devbank.service.ledger.domain.entity.LedgerEntry;
 import com.devbank.service.ledger.infrastructure.repository.LedgerAccountRepository;
 import com.devbank.service.ledger.infrastructure.repository.LedgerEntryRepository;
@@ -57,8 +57,8 @@ public class LedgerEntryService {
         var debitAccount = ledgerAccountRepository.findByExternalRefId(model.getFromAccountId().toString());
         var creditAccount = ledgerAccountRepository.findByExternalRefId(model.getToAccountId().toString());
         if (debitAccount == null || creditAccount == null) {
-            ledgerAccountNotFoundEventProcessor.process(new LedgerAccountNotFoundEvent(model.getTransferId()));
-            return null;
+            ledgerAccountNotFoundEventProcessor.process(new LedgerAccountNotFoundEvent(model.getTransferId(), model.getType()));
+            throw new BadRequestException();
         }
         LedgerEntry transfer = repository.save(factory(model));
         return objectMapper.convertValue(transfer, LedgerEntryDto.class);

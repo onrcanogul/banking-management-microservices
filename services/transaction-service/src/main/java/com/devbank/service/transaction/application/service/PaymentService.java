@@ -2,7 +2,7 @@ package com.devbank.service.transaction.application.service;
 
 import com.devbank.service.transaction.application.dto.CreatePaymentDto;
 import com.devbank.service.transaction.application.dto.PaymentTransactionDto;
-import com.devbank.service.transaction.application.event.transaction.payment.intiiate.PaymentInitiatedProcessor;
+import com.devbank.service.transaction.application.event.producer.PaymentInitiatedProcessor;
 import com.devbank.service.transaction.domain.entity.PaymentTransaction;
 import com.devbank.service.transaction.infrastructure.repository.PaymentTransactionRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;

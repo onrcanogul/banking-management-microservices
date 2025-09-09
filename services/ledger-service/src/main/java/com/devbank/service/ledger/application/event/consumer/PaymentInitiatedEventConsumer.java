@@ -1,9 +1,9 @@
-package com.devbank.service.ledger.application.event.transactional.transfer;
+package com.devbank.service.ledger.application.event.consumer;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.template.messaging.base.consumer.Consumer;
 import com.template.messaging.base.wrapper.EventWrapper;
-import com.template.messaging.event.transaction.TransferInitiatedEvent;
+import com.template.messaging.event.transaction.PaymentInitiatedEvent;
 import com.template.starter.inbox.entity.Inbox;
 import com.template.starter.inbox.repository.InboxRepository;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -11,20 +11,19 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 
-
 @Component
-public class TransferInitiatedEventConsumer implements Consumer<TransferInitiatedEvent> {
-    private final ObjectMapper objectMapper;
+public class PaymentInitiatedEventConsumer implements Consumer<PaymentInitiatedEvent> {
     private final InboxRepository inboxRepository;
+    private final ObjectMapper objectMapper;
 
-    public TransferInitiatedEventConsumer(ObjectMapper objectMapper, InboxRepository inboxRepository) {
-        this.objectMapper = objectMapper;
+    public PaymentInitiatedEventConsumer(InboxRepository inboxRepository, ObjectMapper objectMapper) {
         this.inboxRepository = inboxRepository;
+        this.objectMapper = objectMapper;
     }
 
     @Override
-    @KafkaListener(topics = "transfer.initiated", containerFactory = "kafkaListenerContainerFactory")
-    public void consume(EventWrapper<TransferInitiatedEvent> payload) {
+    @KafkaListener(topics = "payment.initiated", containerFactory = "kafkaListenerContainerFactory")
+    public void consume(EventWrapper<PaymentInitiatedEvent> payload) {
         if (inboxRepository.findByIdempotentToken(payload.id()).isPresent()) return;
         try {
             inboxRepository.save(Inbox.builder()

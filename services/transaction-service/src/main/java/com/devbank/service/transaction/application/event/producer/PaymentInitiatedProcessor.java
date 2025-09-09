@@ -1,4 +1,4 @@
-package com.devbank.service.transaction.application.event.transaction.payment.intiiate;
+package com.devbank.service.transaction.application.event.producer;
 
 import com.devbank.service.transaction.domain.entity.PaymentTransaction;
 import com.template.messaging.base.processor.Processor;

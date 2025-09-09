@@ -11,5 +11,6 @@ import java.util.UUID;
 @Getter @Setter
 @NoArgsConstructor @AllArgsConstructor
 public class LedgerAccountNotFoundEvent implements Event {
-    private UUID transferId;
+    private UUID transactionId;
+    private String type;
 }
