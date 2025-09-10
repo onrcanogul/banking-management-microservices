@@ -15,7 +15,7 @@ public class OutboxScheduler {
     void init() {
         System.out.println("OutboxScheduler bean created");
     }
-        @Scheduled(fixedRate = 5000)
+    @Scheduled(fixedRate = 5000)
     public void run() {
         processor.processAsync();
     }
