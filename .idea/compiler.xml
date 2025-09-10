@@ -42,6 +42,7 @@
       <module name="kafka-starter" options="-parameters" />
       <module name="ledger-service" options="-parameters" />
       <module name="outbox-starter" options="-parameters" />
+      <module name="security-starter" options="-parameters" />
       <module name="transaction-service" options="-parameters" />
     </option>
   </component>

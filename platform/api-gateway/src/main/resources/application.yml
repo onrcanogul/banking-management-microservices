@@ -21,11 +21,11 @@ spring:
             - Path=/account/**
           filters:
             - RewritePath=/account/(?<segment>.*), /api/account/${segment}
-            - name: RequestRateLimiter
-              args:
-                redis-rate-limiter.replenishRate: 10
-                redis-rate-limiter.burstCapacity: 20
-                key-resolver: "#{@ipKeyResolver}"
+#            - name: RequestRateLimiter
+#              args:
+#                redis-rate-limiter.replenishRate: 10
+#                redis-rate-limiter.burstCapacity: 20
+#                key-resolver: "#{@ipKeyResolver}"
 
         - id: account-service-history-status
           uri: lb://account-service
@@ -33,11 +33,11 @@ spring:
             - Path=/account-history-status/**
           filters:
             - RewritePath=/account-history-status/(?<segment>.*), /api/account-history-status/${segment}
-            - name: RequestRateLimiter
-              args:
-                redis-rate-limiter.replenishRate: 10
-                redis-rate-limiter.burstCapacity: 20
-                key-resolver: "#{@ipKeyResolver}"
+#            - name: RequestRateLimiter
+#              args:
+#                redis-rate-limiter.replenishRate: 10
+#                redis-rate-limiter.burstCapacity: 20
+#                key-resolver: "#{@ipKeyResolver}"
 
         - id: account-service-limit
           uri: lb://account-service
@@ -45,11 +45,11 @@ spring:
             - Path=/account-limit/**
           filters:
             - RewritePath=/account-limit/(?<segment>.*), /api/account-limit/${segment}
-            - name: RequestRateLimiter
-              args:
-                redis-rate-limiter.replenishRate: 10
-                redis-rate-limiter.burstCapacity: 20
-                key-resolver: "#{@ipKeyResolver}"
+#            - name: RequestRateLimiter
+#              args:
+#                redis-rate-limiter.replenishRate: 10
+#                redis-rate-limiter.burstCapacity: 20
+#                key-resolver: "#{@ipKeyResolver}"
 
         # ==================== LEDGER SERVICE ====================
         - id: ledger-service-account
@@ -58,11 +58,11 @@ spring:
             - Path=/ledger-account/**
           filters:
             - RewritePath=/ledger-account/(?<segment>.*), /api/ledger-account/${segment}
-            - name: RequestRateLimiter
-              args:
-                redis-rate-limiter.replenishRate: 10
-                redis-rate-limiter.burstCapacity: 20
-                key-resolver: "#{@ipKeyResolver}"
+#            - name: RequestRateLimiter
+#              args:
+#                redis-rate-limiter.replenishRate: 10
+#                redis-rate-limiter.burstCapacity: 20
+#                key-resolver: "#{@ipKeyResolver}"
 
         - id: ledger-service-entry
           uri: lb://ledger-service
@@ -70,11 +70,11 @@ spring:
             - Path=/ledger-entry/**
           filters:
             - RewritePath=/ledger-entry/(?<segment>.*), /api/ledger-entry/${segment}
-            - name: RequestRateLimiter
-              args:
-                redis-rate-limiter.replenishRate: 10
-                redis-rate-limiter.burstCapacity: 20
-                key-resolver: "#{@ipKeyResolver}"
+#            - name: RequestRateLimiter
+#              args:
+#                redis-rate-limiter.replenishRate: 10
+#                redis-rate-limiter.burstCapacity: 20
+#                key-resolver: "#{@ipKeyResolver}"
 
         # ==================== TRANSFER SERVICE ====================
         - id: transfer-service
@@ -83,48 +83,26 @@ spring:
             - Path=/transfer/**
           filters:
             - RewritePath=/transfer/(?<segment>.*), /api/transfer/${segment}
-            - name: RequestRateLimiter
-              args:
-                redis-rate-limiter.replenishRate: 10
-                redis-rate-limiter.burstCapacity: 20
-                key-resolver: "#{@ipKeyResolver}"
+#            - name: RequestRateLimiter
+#              args:
+#                redis-rate-limiter.replenishRate: 10
+#                redis-rate-limiter.burstCapacity: 20
+#                key-resolver: "#{@ipKeyResolver}"
 
         # ==================== OTHER SERVICES ====================
-        - id: git-service
-          uri: lb://git-service
-          predicates:
-            - Path=/git/**
-          filters:
-            - RewritePath=/git/(?<segment>.*), /api/git/${segment}
-            - name: RequestRateLimiter
-              args:
-                redis-rate-limiter.replenishRate: 10
-                redis-rate-limiter.burstCapacity: 20
-                key-resolver: "#{@ipKeyResolver}"
-
         - id: auth-service
           uri: lb://auth-service
           predicates:
             - Path=/auth/**
           filters:
             - RewritePath=/auth/(?<segment>.*), /api/auth/${segment}
-            - name: RequestRateLimiter
-              args:
-                redis-rate-limiter.replenishRate: 3
-                redis-rate-limiter.burstCapacity: 5
-                key-resolver: "#{@ipKeyResolver}"
+#            - name: RequestRateLimiter
+#              args:
+#                redis-rate-limiter.replenishRate: 3
+#                redis-rate-limiter.burstCapacity: 5
+#                key-resolver: "#{@ipKeyResolver}"
 
-        - id: context-graph-service
-          uri: lb://context-graph-service
-          predicates:
-            - Path=/context-graph/**
-          filters:
-            - RewritePath=/context-graph/(?<segment>.*), /api/context-graph/${segment}
-            - name: RequestRateLimiter
-              args:
-                redis-rate-limiter.replenishRate: 3
-                redis-rate-limiter.burstCapacity: 5
-                key-resolver: "#{@ipKeyResolver}"
+
 
 eureka:
   client:
@@ -136,3 +114,5 @@ management:
     web.exposure.include: health,info
   endpoint:
     health.show-details: always
+
+jwt-secret: fcdddf3ec7f9cf18e1642a5b24239fc9c4ff7fed8fbeb53292ab97986141d023972fdae894b0b2a4

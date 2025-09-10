@@ -5,6 +5,7 @@ import com.devbank.service.account.application.dto.UpdateStatusDto;
 import com.devbank.service.account.application.service.AccountService;
 import com.template.core.response.ApiResponse;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -29,6 +30,7 @@ public class AccountController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('CUSTOMER')")
     public ResponseEntity<ApiResponse<AccountDto>> create(@RequestBody AccountDto model) {
         return ResponseEntity.status(201).body(ApiResponse.ok(service.create(model)));
     }

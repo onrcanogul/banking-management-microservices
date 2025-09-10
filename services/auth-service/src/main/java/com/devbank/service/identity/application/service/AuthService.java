@@ -19,13 +19,13 @@ import java.util.UUID;
 public class AuthService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final JwtService jwtService;
+    private final TokenService tokenService;
     private final RefreshTokenRepository refreshTokenRepository;
 
-    public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtService jwtService, RefreshTokenRepository refreshTokenRepository) {
+    public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder, TokenService tokenService, RefreshTokenRepository refreshTokenRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
-        this.jwtService = jwtService;
+        this.tokenService = tokenService;
         this.refreshTokenRepository = refreshTokenRepository;
     }
 
@@ -33,8 +33,8 @@ public class AuthService {
     public TokenDto login(LoginDto model) {
         User user = validateLoginCredentials(model);
         user.setLastLoginAt(LocalDateTime.now());
-        String token = jwtService.generateToken(user, 15);
-        String refreshToken = jwtService.generateRefreshToken(user, 7); //stateful -> handle with key partition
+        String token = tokenService.generateToken(user, 15);
+        String refreshToken = tokenService.generateRefreshToken(user, 7); //stateful -> handle with key partition
         refreshTokenRepository.save(new RefreshToken(UUID.randomUUID(), refreshToken, LocalDateTime.now().plusDays(7), user));
         userRepository.save(user);
         return new TokenDto(token, refreshToken);

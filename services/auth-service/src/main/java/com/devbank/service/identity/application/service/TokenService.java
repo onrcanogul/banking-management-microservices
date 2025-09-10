@@ -11,7 +11,7 @@ import java.time.ZoneId;
 import java.util.Date;
 
 @Service
-public class JwtService {
+public class TokenService {
 
     private final Key key = Keys.hmacShaKeyFor("supersecretkeysupersecretkey123456".getBytes());
 

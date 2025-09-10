@@ -20,5 +20,6 @@
         <module>kafka-starter</module>
         <module>outbox-starter</module>
         <module>inbox-starter</module>
+        <module>security-starter</module>
     </modules>
 </project>

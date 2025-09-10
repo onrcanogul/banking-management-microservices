@@ -74,3 +74,6 @@ devbank:
       enabled: true
       otlp-enabled: false
       otlp-endpoint: http://otel-collector:4317
+
+
+jwt-secret: fcdddf3ec7f9cf18e1642a5b24239fc9c4ff7fed8fbeb53292ab97986141d023972fdae894b0b2a4
