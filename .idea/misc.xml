@@ -9,6 +9,7 @@
         <option value="$PROJECT_DIR$/services/api-gateway/pom.xml" />
         <option value="$PROJECT_DIR$/platform/api-gateway/pom.xml" />
         <option value="$PROJECT_DIR$/platform/discovery-service/pom.xml" />
+        <option value="$PROJECT_DIR$/services/transaction-service/pom.xml" />
       </list>
     </option>
     <option name="ignoredFiles">

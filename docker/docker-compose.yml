@@ -54,7 +54,6 @@ services:
         retries: 40
       networks: [ devnet ]
 
-
   oracle-transfer:
     image: gvenzl/oracle-free:latest
     container_name: dev-oracle-transfer
@@ -74,6 +73,27 @@ services:
       timeout: 5s
       retries: 40
     networks: [ devnet ]
+
+  oracle-auth:
+    image: gvenzl/oracle-free:latest
+    container_name: dev-oracle-transfer
+    restart: unless-stopped
+    environment:
+      ORACLE_PASSWORD: oracle
+      APP_USER: AUTH
+      APP_USER_PASSWORD: auth
+    ports:
+      - "1524:1521"
+    volumes:
+      - transfer-oracle_data:/opt/oracle/oradata
+    shm_size: "1g"
+    healthcheck:
+      test: [ "CMD-SHELL", "echo 'SELECT 1 FROM DUAL;' | sqlplus -s system/oracle@//127.0.0.1:1521/XEPDB1 | grep -q 1" ]
+      interval: 15s
+      timeout: 5s
+      retries: 40
+    networks: [ devnet ]
+
 
   # ---------- Messaging (ZooKeeper + Kafka + UI) ----------
   zookeeper:
@@ -109,8 +129,8 @@ services:
       # DEV için istersen otomatik topic oluşturma:
       # - KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE=true
     ports:
-      - "9092:9092"     # cluster içi
-      - "19092:19092"   # host'tan Spring'in bağlanacağı port
+      - "9092:9092"
+      - "19092:19092"
     volumes:
       - kafka_data:/bitnami/kafka
     healthcheck:

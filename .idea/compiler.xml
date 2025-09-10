@@ -14,6 +14,7 @@
         <module name="ledger-service" />
         <module name="discovery-service" />
         <module name="common-test" />
+        <module name="auth-service" />
         <module name="api-gateway" />
         <module name="transaction-service" />
         <module name="common-web" />
@@ -33,6 +34,7 @@
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="account-service" options="-parameters" />
       <module name="api-gateway" options="-parameters" />
+      <module name="auth-service" options="-parameters" />
       <module name="common-messaging" options="" />
       <module name="discovery-service" options="-parameters" />
       <module name="example-service" options="" />

@@ -18,5 +18,6 @@
         <module>account-service</module>
         <module>ledger-service</module>
         <module>transaction-service</module>
+        <module>auth-service</module>
     </modules>
 </project>
